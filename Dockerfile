@@ -21,5 +21,5 @@ RUN yarn build || echo "Build finalizado com avisos"
 
 EXPOSE 3000
 
-# Inicia o sistema
-CMD ["yarn", "start"]
+# MUDANÇA AQUI: Chama o comando que criamos no seu package.json
+CMD ["npm", "run", "start:render"]
