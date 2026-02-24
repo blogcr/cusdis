@@ -1,6 +1,5 @@
 import { prisma } from '../utils.server'
 
-const parser = require('xml2json')
 import TurndownService from 'turndown'
 import { statService } from './stat.service'
 const turndownService = new TurndownService()
@@ -24,63 +23,11 @@ export type DataSchema = {
 }
 
 export class DataService {
+  // Função desativada para remover dependência do xml2json
   disqusAdapter(xmlData: string): DataSchema {
-    const parsed = JSON.parse(parser.toJson(xmlData)).disqus
-    const threads = (parsed.thread.filter(
-      (_) => typeof _.id === 'string' && _.isDeleted === 'false',
-    ) as Array<{
-      'dsq:id': string
-      id: string
-      link: string
-      title: string
-      createdAt: string
-      isDeleted: string
-    }>).map((_) => {
-      return {
-        uniqueId: _['dsq:id'],
-        pageId: _.id,
-        url: _.link,
-        title: _.title,
-      } as DataSchema['pages'][0]
-    })
-
-    const posts = (parsed.post as Array<{
-      'dsq:id': string
-      message: string
-      createdAt: string
-      isDeleted: string
-      thread: {
-        'dsq:id': string
-      }
-      author: {
-        name: string
-        isAnonymous: string
-        username: string
-      }
-      parent?: {
-        'dsq:id': string
-      }
-    }>)
-      .map((_) => {
-        return {
-          pageUniqueId: _.thread['dsq:id'],
-          by_nickname: _.author.name,
-          content: turndownService.turndown(_.message),
-          id: _['dsq:id'],
-          createdAt: _.createdAt,
-          pageId: _.thread['dsq:id'],
-          parentId: _.parent?.['dsq:id'],
-        } as DataSchema['comments'][0]
-      })
-      .filter(
-        (post) =>
-          threads.findIndex((_) => _.uniqueId === post.pageUniqueId) !==
-          -1,
-      )
-
     return {
-      pages: threads,
-      comments: posts,
+      pages: [],
+      comments: []
     }
   }
 
@@ -128,11 +75,11 @@ export class DataService {
     }
   }
 
+  // Função desativada para remover dependência do xml2json
   async importFromDisqus(projectId: string, xmlData: string) {
-
-    const result = await this.import(projectId, this.disqusAdapter(xmlData))
-    statService.capture('import_disqus')
-
-    return result
+    return {
+      threads: [],
+      posts: []
+    }
   }
 }
