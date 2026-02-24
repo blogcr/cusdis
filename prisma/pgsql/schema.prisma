@@ -2,8 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DB_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -74,12 +75,12 @@ model Subscription {
   user   User   @relation(fields: [userId], references: [id])
 
   lemonSubscriptionId String?   @map(name: "lemon_subscription_id")
-  orderId             String    @map(name: "order_id")
-  productId           String?   @map(name: "product_id")
-  variantId           String?   @map(name: "variant_id")
-  customerId          String?   @map(name: "customer_id")
-  status              String
-  endsAt              DateTime? @map(name: "endsAt")
+  orderId              String    @map(name: "order_id")
+  productId            String?   @map(name: "product_id")
+  variantId            String?   @map(name: "variant_id")
+  customerId           String?   @map(name: "customer_id")
+  status               String
+  endsAt               DateTime? @map(name: "endsAt")
 
   updatePaymentMethodUrl String? @map(name: "update_payment_method_url")
 
@@ -111,7 +112,7 @@ model Project {
 
   pages Page[]
 
-  token                 String?
+  token                  String?
   fetchLatestCommentsAt DateTime? @map(name: "fetch_latest_comments_at")
 
   enableNotification Boolean? @default(true) @map(name: "enable_notification")
@@ -155,7 +156,7 @@ model Comment {
   moderator   User?   @relation(fields: [moderatorId], references: [id])
   by_email    String?
   by_nickname String
-  content     String
+  content      String
 
   approved Boolean @default(false)
 
